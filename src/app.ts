@@ -1,0 +1,62 @@
+import express, { Application, Request, Response, NextFunction } from 'express';
+import cors from 'cors';
+import path from 'path';
+import { connectDatabase } from './config/database';
+import authRoutes from './routes/auth';
+import recipeRoutes from './routes/recipes';
+import { handleError } from './utils/errors';
+import fs from 'fs';
+
+const app: Application = express();
+const PORT = process.env.PORT || 3000;
+
+// Ensure uploads directory exists
+const uploadsDir = path.join(process.cwd(), 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static(uploadsDir));
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/recipes', recipeRoutes);
+
+// Health check endpoint
+app.get('/health', (req: Request, res: Response) => {
+  res.json({ status: 'ok', message: 'Server is running' });
+});
+
+// 404 handler
+app.use((req: Request, res: Response) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
+// Error handling middleware
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  handleError(err, res);
+});
+
+// Start server
+const startServer = async () => {
+  try {
+    await connectDatabase();
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+startServer();
+
+export default app;
+
