@@ -7,10 +7,6 @@ import path from 'path';
 
 export const createRecipe = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    if (!req.file) {
-      throw new AppError('Image is required', 400);
-    }
-
     const validatedData = recipeSchema.parse({
       title: req.body.title,
       description: req.body.description,
@@ -20,7 +16,7 @@ export const createRecipe = async (req: AuthRequest, res: Response): Promise<voi
 
     const recipe = new Recipe({
       ...validatedData,
-      imagePath: req.file.path,
+      imagePath: req.file?.path,
       userId: req.user!.id,
     });
 
@@ -34,7 +30,7 @@ export const createRecipe = async (req: AuthRequest, res: Response): Promise<voi
         description: recipe.description,
         cuisine: recipe.cuisine,
         sourceUrl: recipe.sourceUrl,
-        imageUrl: `/uploads/${path.basename(recipe.imagePath)}`,
+        imageUrl: recipe.imagePath ? `/uploads/${path.basename(recipe.imagePath)}` : null,
         createdAt: recipe.createdAt,
         updatedAt: recipe.updatedAt,
       },
@@ -56,7 +52,7 @@ export const getRecipes = async (req: AuthRequest, res: Response): Promise<void>
       description: recipe.description,
       cuisine: recipe.cuisine,
       sourceUrl: recipe.sourceUrl,
-      imageUrl: `/uploads/${path.basename(recipe.imagePath)}`,
+      imageUrl: recipe.imagePath ? `/uploads/${path.basename(recipe.imagePath)}` : null,
       createdAt: recipe.createdAt,
       updatedAt: recipe.updatedAt,
     }));
@@ -92,7 +88,7 @@ export const getRecipe = async (req: AuthRequest, res: Response): Promise<void> 
         description: recipe.description,
         cuisine: recipe.cuisine,
         sourceUrl: recipe.sourceUrl,
-        imageUrl: `/uploads/${path.basename(recipe.imagePath)}`,
+        imageUrl: recipe.imagePath ? `/uploads/${path.basename(recipe.imagePath)}` : null,
         createdAt: recipe.createdAt,
         updatedAt: recipe.updatedAt,
       },

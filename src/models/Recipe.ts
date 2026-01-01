@@ -5,7 +5,7 @@ export interface IRecipe extends Document {
   description?: string;
   cuisine: string;
   sourceUrl: string;
-  imagePath: string;
+  imagePath?: string;
   userId: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
@@ -45,7 +45,6 @@ const recipeSchema = new Schema<IRecipe>(
     },
     imagePath: {
       type: String,
-      required: [true, 'Image is required'],
     },
     userId: {
       type: Schema.Types.ObjectId,

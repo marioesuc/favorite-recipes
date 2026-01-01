@@ -36,7 +36,7 @@ npm install
 2. Create a `.env` file in the root directory:
 ```env
 PORT=3000
-MONGODB_URI=mongodb://localhost:27017/favorite-recipes
+MONGODB_URI=mongodb://localhost:27018/favorite-recipes
 JWT_SECRET=your-secret-key-change-this-in-production
 NODE_ENV=development
 JWT_EXPIRES_IN=7d
@@ -47,7 +47,7 @@ JWT_EXPIRES_IN=7d
 docker-compose up -d
 ```
 
-This will start MongoDB in a Docker container on port 27017.
+This will start MongoDB in a Docker container on port 27018 (to avoid conflicts with other MongoDB instances).
 
 ## Running the Application
 
@@ -115,7 +115,7 @@ Fields:
 - description: string (optional)
 - cuisine: string (required)
 - sourceUrl: string (required, valid URL)
-- image: file (required, image file)
+- image: file (optional, image file)
 ```
 
 ## Project Structure

@@ -4,11 +4,12 @@ services:
     container_name: favorite-recipes-mongodb
     restart: unless-stopped
     ports:
-      - "27017:27017"
+      - "27018:27017"
     environment:
       MONGO_INITDB_DATABASE: favorite-recipes
     volumes:
       - mongodb_data:/data/db
+    command: ["mongod", "--bind_ip_all"]
 
 volumes:
   mongodb_data:

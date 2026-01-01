@@ -93,10 +93,18 @@ Run the provided test script (see `test-api.sh` or `test-api.js`).
 
 ### Setup
 
-1. Import the Postman collection (if available) or create requests manually
-2. Set up environment variables:
-   - `baseUrl`: `http://localhost:3000`
-   - `token`: (will be set after login)
+1. **Import the Postman Collection:**
+   - Open Postman
+   - Click "Import" button
+   - Import `Favorite-Recipes-API.postman_collection.json`
+   - Import `Favorite-Recipes-API.postman_environment.json`
+   - Select the "Favorite Recipes - Local" environment
+
+2. **Environment Variables (auto-configured):**
+   - `base_url`: `http://localhost:3000` (default)
+   - `auth_token`: (automatically saved after login/register)
+   - `user_id`: (automatically saved after login/register)
+   - `recipe_id`: (automatically saved after creating a recipe)
 
 ### Requests to Create
 
