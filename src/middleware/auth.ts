@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { AuthRequest, JWTPayload } from '../types';
 import { User } from '../models/User';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET: string = process.env.JWT_SECRET || 'your-secret-key';
 
 export const authenticate = async (
   req: AuthRequest,
