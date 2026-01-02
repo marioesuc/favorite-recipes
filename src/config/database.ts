@@ -7,11 +7,20 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27018/favori
 
 export const connectDatabase = async (): Promise<void> => {
   try {
+    // If already connected, return early
+    if (mongoose.connection.readyState === 1) {
+      return;
+    }
+
     await mongoose.connect(MONGODB_URI);
     console.log('MongoDB connected successfully');
   } catch (error) {
     console.error('MongoDB connection error:', error);
-    process.exit(1);
+    // Don't exit process in serverless environment (Vercel)
+    if (process.env.VERCEL !== '1' && !process.env.VERCEL_ENV) {
+      process.exit(1);
+    }
+    throw error;
   }
 };
 

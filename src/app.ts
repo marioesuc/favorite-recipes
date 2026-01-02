@@ -43,7 +43,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   handleError(err, res);
 });
 
-// Start server
+// Start server (only if not in serverless environment)
 const startServer = async () => {
   try {
     await connectDatabase();
@@ -56,7 +56,10 @@ const startServer = async () => {
   }
 };
 
-startServer();
+// Only start server if not in serverless environment (Vercel)
+if (process.env.VERCEL !== '1' && !process.env.VERCEL_ENV) {
+  startServer();
+}
 
 export default app;
 
