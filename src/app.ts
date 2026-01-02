@@ -10,19 +10,24 @@ import fs from 'fs';
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
 
-// Ensure uploads directory exists
+// Ensure uploads directory exists (only in non-serverless environments)
+const isServerless = process.env.VERCEL === '1' || process.env.VERCEL_ENV;
 const uploadsDir = path.join(process.cwd(), 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+
+if (!isServerless) {
+  // Only create uploads directory in non-serverless environments
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+  
+  // Serve static files from uploads directory (only in non-serverless)
+  app.use('/uploads', express.static(uploadsDir));
 }
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Serve static files from uploads directory
-app.use('/uploads', express.static(uploadsDir));
 
 // Routes
 app.use('/api/auth', authRoutes);

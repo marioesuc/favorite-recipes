@@ -2,19 +2,23 @@ import multer from 'multer';
 import path from 'path';
 import { Request } from 'express';
 
+const isServerless = process.env.VERCEL === '1' || process.env.VERCEL_ENV;
 const uploadsDir = path.join(process.cwd(), 'uploads');
 
 // Configure storage
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => {
-    cb(null, uploadsDir);
-  },
-  filename: (_req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname);
-    cb(null, `recipe-${uniqueSuffix}${ext}`);
-  },
-});
+// Use memory storage on serverless (Vercel), disk storage otherwise
+const storage = isServerless
+  ? multer.memoryStorage()
+  : multer.diskStorage({
+      destination: (_req, _file, cb) => {
+        cb(null, uploadsDir);
+      },
+      filename: (_req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        const ext = path.extname(file.originalname);
+        cb(null, `recipe-${uniqueSuffix}${ext}`);
+      },
+    });
 
 // File filter for images only
 const fileFilter = (
