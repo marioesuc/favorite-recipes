@@ -29,17 +29,17 @@ app.use('/api/auth', authRoutes);
 app.use('/api/recipes', recipeRoutes);
 
 // Health check endpoint
-app.get('/health', (req: Request, res: Response) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
 
 // 404 handler
-app.use((req: Request, res: Response) => {
+app.use((_req: Request, res: Response) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
 // Error handling middleware
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   handleError(err, res);
 });
 
